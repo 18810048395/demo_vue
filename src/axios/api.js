@@ -1,9 +1,9 @@
 //api.js
 import service from './request.js'
  
-export function login(userId) {
+export function login(userName,password) {
     return service({
-      url: '/user/getUserById?userId='+userId,
+      url: '/user/getUserByName?userName='+userName+'&password='+password,
       method: 'get'
     })
   }

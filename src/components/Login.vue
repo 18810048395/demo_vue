@@ -1,40 +1,73 @@
 <template>
   <div class="login-container">
-    <el-form ref="form" :model="form" label-width="80px" class="login-form">
+    <el-form
+      ref="loginForm"
+      :model="form"
+      :rules="rules"
+      label-width="80px"
+      class="login-form"
+      @keyup.enter.native="onSubmit('loginForm')"
+    >
       <h2 class="login-title">管理系统</h2>
-      <el-form-item label="用户名">
-        <el-input v-model="form.username"></el-input>
+      <el-form-item label="用户名" prop="userName">
+        <el-input v-model="form.userName" placeholder="请输入用户名"></el-input>
       </el-form-item>
-      <el-form-item label="密码">
-        <el-input v-model="form.password"></el-input>
+      <el-form-item label="密码" prop="password">
+        <el-input v-model="form.password" placeholder="请输入密码" type="password"></el-input>
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">登录</el-button>
+        <el-button type="primary" @click="onSubmit('loginForm')"
+          >登录</el-button
+        >
       </el-form-item>
     </el-form>
   </div>
 </template>
 <script>
-import {login} from '../axios/api.js'
+import { login } from "../axios/api.js";
 export default {
-  data () {
+  data() {
     return {
       form: {
-        username: '',
-        password: ''
-      }
-    }
+        userName: "",
+        password: "",
+      },
+      rules: {
+        userName: [
+          { required: true, message: "用户名不能为空", trigger: "change" },
+        ],
+        password: [
+          { required: true, message: "密码不能为空", trigger: "change" },
+        ],
+      },
+    };
   },
   methods: {
-    onSubmit () {
-      login("1").then(data=>{
-        console.log(data);
-      })
-      console.log('submit!')
-    }
-  }
-}
+    onSubmit(fromName) {
+      this.$refs[fromName].validate((valid) => {
+        if (valid) {
+          login(this.form.userName,this.form.password).then((result) => {
+            console.log(result);
+            if(200 == result.code){
+              if('验证成功！' == result.msg){
+                this.$message({message:result.msg,duration:2000,type:'success'});
+                this.$router.push('/hello');
+              }else{
+                this.$message({message:result.msg,duration:2000,type:'error'})
+              } 
+            }else{
+              this.$message({message:result.msg,duration:2000,type:'error'})
+            }
+            
+          },(error) =>{
+              this.$message({message:'网络或内部错误，请联系管理员',duration:2000,type:'error'})
+          });
+        }
+      });
+    },
+  },
+};
 </script>
 
 <style acoped>
