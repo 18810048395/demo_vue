@@ -7,3 +7,10 @@ export function login(userName,password) {
       method: 'get'
     })
   }
+
+export function getUserList() {
+  return service({
+    url: '/user/getUserList',
+    method: 'get'
+  })
+}

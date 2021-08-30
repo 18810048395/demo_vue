@@ -52,7 +52,7 @@ export default {
             if(200 == result.code){
               if('验证成功！' == result.msg){
                 this.$message({message:result.msg,duration:2000,type:'success'});
-                this.$router.push('/hello');
+                this.$router.push('/main');
               }else{
                 this.$message({message:result.msg,duration:2000,type:'error'})
               } 
